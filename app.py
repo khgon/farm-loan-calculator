@@ -129,7 +129,7 @@ if submit:
         st.subheader("대출 조건")
         st.write(f"- 대출 실행 연도: {start_year}년")
         st.write(f"- 금리: {annual_rate}%")
-        st.write(f"- 상환조건 : {grace_years}년 거치 {total_years - grace_years}년 원금균등분할")
+        st.write(f"- 대출(상환)기간 : {grace_years}년 거치 {total_years - grace_years}년 원금균등분할")
 
         total_interest = df['이자(원)'].sum()
         st.write(f"**총 이자 총액:** {total_interest:,}원")
