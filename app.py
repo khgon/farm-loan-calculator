@@ -113,8 +113,17 @@ st.sidebar.write(f"현재 원금: {st.session_state.principal:,}원 ({format_kor
 # 대출 조건 입력 폼
 with st.sidebar.form(key='loan_form'):
     annual_rate = st.slider("금리 (%)", 0.0, 10.0, 1.5, 0.1)
-    total_years = st.slider("전체 기간 (년)", 1, 50, 25)
-    grace_years = st.slider("거치 기간 (년)", 0, total_years - 1, 5)
+    grace_years = st.slider("거치 기간 (년)", 0, 49, 5)
+    max_repay_years = 50 - grace_years
+    default_repay_years = min(20, max_repay_years)
+    repay_years = st.slider(
+        "원금상환기간 (년)",
+        min_value=1,
+        max_value=max_repay_years,
+        value=default_repay_years,
+    )
+    total_years = grace_years + repay_years
+    st.write(f"전체 기간 (년): {total_years}")
     submit = st.form_submit_button("계산하기")
 
 # 계산 및 결과 표시
@@ -129,7 +138,7 @@ if submit:
         st.subheader("대출 조건")
         st.write(f"- 대출 실행 연도: {start_year}년")
         st.write(f"- 금리: {annual_rate}%")
-        st.write(f"- 대출(상환)기간 : {grace_years}년 거치 {total_years - grace_years}년 원금균등분할")
+        st.write(f"- 대출(상환)기간 : {grace_years}년 거치 {repay_years}년 원금균등분할")
 
         total_interest = df['이자(원)'].sum()
         st.write(f"**총 이자 총액:** {total_interest:,}원")
