@@ -11,8 +11,6 @@ def generate_loan_schedule(principal: int, annual_rate: float, total_years: int,
     첫 번째 행(대출 실행 연도)은 원금만 남아 있고 이자 및 원금상환 없음.
     이후 거치기간 동안 이자만 납부, 그 다음부터 원금균등분할 상환을 적용합니다.
     """
-    from decimal import Decimal, localcontext, ROUND_HALF_EVEN
-
     if principal <= 0:
         raise ValueError("대출 원금은 0보다 커야 합니다.")
     if annual_rate < 0:
@@ -31,9 +29,7 @@ def generate_loan_schedule(principal: int, annual_rate: float, total_years: int,
         repay_years = total_years - grace_years
 
         principal_dec = Decimal(principal)
-        temp_payment = principal_dec / Decimal(repay_years)
-        base_principal_payment = temp_payment.quantize(Decimal('1'), rounding=ROUND_HALF_EVEN)
-        extra = principal_dec - base_principal_payment * repay_years
+        base_principal_payment, extra = divmod(principal_dec, Decimal(repay_years))
 
         rows = []
         # 최초 연도: 원금만 유지, 이자/원금 없음
